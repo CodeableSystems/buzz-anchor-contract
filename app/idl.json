@@ -1,0 +1,220 @@
+{
+  "version": "0.1.0",
+  "name": "shadowmedia",
+  "instructions": [
+    {
+      "name": "storeChannel",
+      "accounts": [
+        {
+          "name": "channel",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "drvacc",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sysowner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "topic",
+          "type": "string"
+        },
+        {
+          "name": "desc",
+          "type": "string"
+        },
+        {
+          "name": "img",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "storeVideo",
+      "accounts": [
+        {
+          "name": "video",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "drvacc",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "chacc",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sysowner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "topic",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "img",
+          "type": "string"
+        },
+        {
+          "name": "file",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Channel",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "drvacc",
+            "type": "publicKey"
+          },
+          {
+            "name": "sysowner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "topic",
+            "type": "string"
+          },
+          {
+            "name": "img",
+            "type": "string"
+          },
+          {
+            "name": "desc",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Video",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "chacc",
+            "type": "publicKey"
+          },
+          {
+            "name": "drvacc",
+            "type": "publicKey"
+          },
+          {
+            "name": "sysowner",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "topic",
+            "type": "string"
+          },
+          {
+            "name": "img",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "file",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TopicTooLong",
+      "msg": "The provided topic should be max 50 characters."
+    },
+    {
+      "code": 6001,
+      "name": "TopicTooShort",
+      "msg": "The provided topic should be minimum 2 characters."
+    },
+    {
+      "code": 6002,
+      "name": "DescTooLong",
+      "msg": "The provided content should be 50 characters maximum."
+    },
+    {
+      "code": 6003,
+      "name": "DescTooShort",
+      "msg": "The provided description should be minimum 2 characters."
+    },
+    {
+      "code": 6004,
+      "name": "FilenameTooLong",
+      "msg": "The provided filename should be 32 characters long maximum."
+    },
+    {
+      "code": 6005,
+      "name": "ImgTooLong",
+      "msg": "The provided image filename should be 32 characters long maximum."
+    }
+  ],
+  "metadata": {
+    "address": "98f6QG1oDGUrDMuEmMy2qj56EUSxBduGGjptBfeRg7Qf"
+  }
+}
