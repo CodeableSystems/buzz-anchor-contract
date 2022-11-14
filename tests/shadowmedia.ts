@@ -8,59 +8,75 @@ import {
   Keypair,
   Connection,
 } from "@solana/web3.js";
+const { BN } = anchor;
 
 describe("shadowmedia", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
   const program = anchor.workspace.Shadowmedia as Program<Shadowmedia>;
-  var driveAccount;
-  var channelAccount1;
-  var channelAccount2 = Keypair.generate();
-  var sysowner = new anchor.web3.Keypair.generate();
-  var user = anchor.web3.Keypair.generate();
+  let airdropAmount = new BN(4 * LAMPORTS_PER_SOL).toNumber();
+  let driveAccount;
+  let channelAccount1;
+  let channelAccount2 = Keypair.generate();
+  // secret key only used for local testing
+  let sysowner = Keypair.fromSecretKey(
+    new Uint8Array([
+      216, 75, 226, 187, 112, 71, 166, 104, 252, 244, 47, 130, 242, 111, 66,
+      254, 153, 154, 1, 0, 121, 40, 195, 93, 168, 59, 158, 134, 159, 60, 145,
+      217, 32, 147, 194, 121, 165, 6, 246, 54, 184, 41, 130, 131, 16, 71, 186,
+      10, 175, 220, 14, 140, 87, 99, 189, 190, 29, 93, 16, 75, 8, 248, 157, 23,
+    ])
+  );
+  let user = anchor.web3.Keypair.generate();
+  before(async () => {
+    let signature;
+    signature = await program.provider.connection.requestAirdrop(
+      sysowner.publicKey,
+      airdropAmount
+    );
+    await program.provider.connection.confirmTransaction(signature);
+    signature = await program.provider.connection.requestAirdrop(
+      user.publicKey,
+      airdropAmount
+    );
+    await program.provider.connection.confirmTransaction(signature);
+  });
 
   it("can store a new username", async () => {
     let { wallet } = program.provider;
-    let tx = await program.rpc.storeName(
-      "svenasol",
-      {
-        accounts: {
-          user: user.publicKey,
-          author: wallet.publicKey,
-          sysowner: sysowner.publicKey,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        },
-        signers: [user, wallet.payer],
-      }
-    );
+    let tx = await program.rpc.storeName("rabbagast", {
+      accounts: {
+        user: user.publicKey,
+        author: wallet.publicKey,
+        sysowner: sysowner.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      },
+      signers: [user, wallet.payer],
+    });
     //console.log(tx)
     //console.log(program.account)
 
     // Fetch the account details of the created video.
-    const userAccount = await program.account.username.fetch(
-      user.publicKey
-    );
+    const userAccount = await program.account.username.fetch(user.publicKey);
 
     // Ensure it has the right data.
     assert.equal(
       userAccount.author.toBase58(),
       program.provider.wallet.publicKey.toBase58()
     );
-    assert.equal(userAccount.name, "svenasol");
+    assert.equal(userAccount.name, "rabbagast");
     assert.equal(userAccount.verified, false);
     assert.ok(userAccount.timestamp);
 
     const usernames = await program.account.username.all();
-    usernames.forEach(u=>{
-      console.log(u.publicKey.toBase58(), u.account.name, u.account.verified)
-    })
-
+    usernames.forEach((u) => {
+      console.log(u.publicKey.toBase58(), u.account.name, u.account.verified);
+    });
   });
   it("can approve a new username", async () => {
     let { wallet } = program.provider;
-    try{
-    let tx = await program.rpc.approveUsername(
-      {
+    try {
+      let tx = await program.rpc.approveUsername({
         accounts: {
           user: user.publicKey,
           author: wallet.publicKey,
@@ -68,28 +84,24 @@ describe("shadowmedia", () => {
           systemProgram: anchor.web3.SystemProgram.programId,
         },
         signers: [sysowner, wallet.payer],
-      }
-    );
-    console.log(tx)
-    }catch(e){
-      console.error(e)
+      });
+      console.log(tx);
+    } catch (e) {
+      console.error(e);
     }
     //console.log(program.account)
 
     // Fetch the account details of the created video.
-    const userAccount = await program.account.username.fetch(
-      user.publicKey
-    );
+    const userAccount = await program.account.username.fetch(user.publicKey);
 
     // Ensure it has the right data.
-    assert.equal(userAccount.name, "svenasol");
+    assert.equal(userAccount.name, "rabbagast");
 
     const usernames = await program.account.username.all();
-    usernames.forEach(u=>{
-      console.log(u.publicKey.toBase58(), u.account.name, u.account.verified)
-    })
+    usernames.forEach((u) => {
+      console.log(u.publicKey.toBase58(), u.account.name, u.account.verified);
+    });
   });
-
 
   xit("can store a new channel", async () => {
     const channel = anchor.web3.Keypair.generate();
@@ -210,7 +222,7 @@ describe("shadowmedia", () => {
         "Description of video", //content
         "thumb.jpg", //img
         "video.mp4", //file
-	"",
+        "",
         {
           accounts: {
             video: video.publicKey,

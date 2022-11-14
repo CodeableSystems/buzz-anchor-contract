@@ -1,14 +1,14 @@
 [features]
 seeds = false
 skip-lint = false
-[programs.devnet]
+[programs.localnet]
 shadowmedia = "ESfupR6JYGqkYE99f611KvK8e8DCUKRXh9i3tkgcoaW1"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/home/sven/.config/solana/id.json"
 
 [scripts]

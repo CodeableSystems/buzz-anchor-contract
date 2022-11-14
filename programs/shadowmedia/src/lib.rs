@@ -10,7 +10,7 @@ pub mod util {
     }
 }
 
-const YOUR_PUBKEY: &str = "HF3CBT9JFfgN3S61JWAduB8mT2SmsgtRihFZvnyvjQQK";
+const SYS_PUBKEY: &str = "3CAj6MK8HxyNNBQQDcAoqH3Avsm6QYAo7WiUUrN7y7nE";
 
 #[program]
 pub mod shadowmedia {
@@ -74,7 +74,7 @@ pub struct StoreName<'info> {
     pub author: Signer<'info>,
     /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(
-        mut, address = YOUR_PUBKEY.parse::<Pubkey>().unwrap(),
+        mut, address = SYS_PUBKEY.parse::<Pubkey>().unwrap(),
     )]
     pub sysowner: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
@@ -87,7 +87,7 @@ pub struct ApproveName<'info> {
     pub user: Account<'info, Username>,
     /// CHECK: This is not dangerous because we don't read or write from this account
     #[account(
-        mut, address = YOUR_PUBKEY.parse::<Pubkey>().unwrap(),
+        mut, address = SYS_PUBKEY.parse::<Pubkey>().unwrap(),
     )]
     pub sysowner: Signer<'info>,
     pub system_program: Program<'info, System>,
